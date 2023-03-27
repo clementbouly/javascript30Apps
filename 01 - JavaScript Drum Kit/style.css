@@ -32,6 +32,13 @@ body,html {
   text-shadow: 0 0 .5rem black;
 }
 
+.key:hover{
+  transform: scale(1.1);
+  border-color: #ffffff;
+  box-shadow: 0 0 1rem #ffc600;
+  cursor: pointer;
+}
+
 .playing {
   transform: scale(1.1);
   border-color: #ffc600;
