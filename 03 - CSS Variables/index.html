@@ -38,10 +38,10 @@
 		<img src="https://source.unsplash.com/7bwQXzbF6KE/800x500" />
 
 		<style>
-			html {
-				--img-padding: 1rem;
-				--img-blur: 0px;
-				--img-color: #ffc600;
+			:root {
+				--spacing: 1rem;
+				--blur: 0px;
+				--base: #ffc600;
 			}
 
 			body {
@@ -62,38 +62,40 @@
 			}
 
 			img {
-				padding: var(--img-padding);
-				background: var(--img-color);
-				filter: blur(var(--img-blur));
+				padding: var(--spacing);
+				background: var(--base);
+				filter: blur(var(--blur));
 				transition: all 0.3s;
 			}
 
 			.hl {
-				color: var(--img-color);
+				color: var(--base);
 			}
 		</style>
 
 		<script>
-			const spacingInput = document.querySelector("#spacing")
-			const blurInput = document.querySelector("#blur")
-			const colorInput = document.querySelector("#base")
+			const inputs = document.querySelectorAll("input")
 
-			// init values
-			document.documentElement.style.setProperty("--img-padding", `${spacingInput.value}px`)
-			document.documentElement.style.setProperty("--img-blur", `${blurInput.value}px`)
-			document.documentElement.style.setProperty("--img-color", `${colorInput.value}`)
+      // convert the NodeList to an array
+      const inputsArray = Array.from(inputs)
+      console.log(inputsArray);
 
-			spacingInput.addEventListener("input", (e) => {
-				document.documentElement.style.setProperty("--img-padding", `${e.target.value}px`)
+			inputs.forEach((input) => {
+				init(input)
+				input.addEventListener("input", handleUpdate)
 			})
 
-			blurInput.addEventListener("input", (e) => {
-				document.documentElement.style.setProperty("--img-blur", `${e.target.value}px`)
-			})
+			function init(input) {
+				document.documentElement.style.setProperty(
+					`--${input.name}`,
+					input.value + (input.dataset.sizing || "")
+				)
+			}
 
-			colorInput.addEventListener("input", (e) => {
-				document.documentElement.style.setProperty("--img-color", `${e.target.value}`)
-			})
+			function handleUpdate() {
+				const suffix = this.dataset.sizing || ""
+				document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix)
+			}
 		</script>
 	</body>
 </html>
