@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Hold Shift to Check Multiple Checkboxes</title>
+		<link rel="icon" href="https://fav.farm/🔥" />
+	</head>
+	<body>
+		<style>
+			html {
+				font-family: sans-serif;
+				background: #ffc600;
+			}
+
+			.inbox {
+				max-width: 400px;
+				margin: 50px auto;
+				background: white;
+				border-radius: 5px;
+				box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+			}
+
+			.item {
+				display: flex;
+				align-items: center;
+				border-bottom: 1px solid #f1f1f1;
+			}
+
+			.item:last-child {
+				border-bottom: 0;
+			}
+
+			input:checked + label {
+				background: #f9f9f9;
+				text-decoration: line-through;
+			}
+
+			input[type="checkbox"] {
+				margin: 20px;
+				cursor: pointer;
+			}
+
+			label {
+				margin: 0;
+				padding: 20px;
+				transition: background 0.2s;
+				flex: 1;
+				font-family: "helvetica neue";
+				font-size: 20px;
+				font-weight: 200;
+				border-left: 1px solid #d1e2ff;
+        user-select: none;
+			}
+			.container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+			}
+			.box {
+				width: 20px;
+				aspect-ratio: 1;
+				background: red;
+			}
+			.circle {
+				width: 20px;
+				aspect-ratio: 1;
+				background: green;
+				border-radius: 50%;
+			}
+
+			/* Avril 2023 -> :has() pas encore supporté sur Firefox */
+			.box:has(+ .circle) {
+				background: blue;
+			}
+		</style>
+		<!--
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+  -->
+		<div class="inbox">
+			<div class="item">
+				<input type="checkbox" id="inbox-layout" />
+				<label for="inbox-layout">This is an inbox layout.</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="check-one" />
+				<label for="check-one">Check one item</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="hold-shift" />
+				<label for="hold-shift">Hold down your Shift key</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="check-lower" />
+				<label for="check-lower">Check a lower item</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="check-in-between" />
+				<label for="check-in-between">Everything in between should also be set to checked</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="without-libraries" />
+				<label for="without-libraries">Try to do it without any libraries</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="regular-js" />
+				<label for="regular-js">Just regular JavaScript</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="good-luck" />
+				<label for="good-luck">Good Luck!</label>
+			</div>
+			<div class="item">
+				<input type="checkbox" id="tweet-result" />
+				<label for="tweet-result">Don't forget to tweet your result!</label>
+			</div>
+		</div>
+
+		<div>
+			<div class="item">
+				<input type="checkbox" />
+				<p>This is an inbox layout.</p>
+			</div>
+			<div class="container">
+				<div class="box"></div>
+				<div class="box"></div>
+				<div class="box"></div>
+				<div class="circle"></div>
+				<div class="box"></div>
+			</div>
+		</div>
+
+		<script>
+			const checkboxes = [...document.querySelectorAll(".inbox input[type=checkbox]")]
+			const inbox = document.querySelector(".inbox")
+			let lastCheckedIndex = null
+
+			inbox.addEventListener("click", (e) => {
+				if (e.target.type === "checkbox") {
+					handleCheckboxClick(e, e.target)
+				} 
+        // If the user clicks on the label, we need to get the associated checkbox
+        else if (e.target.tagName === "LABEL") {
+					const associatedCheckbox = e.target.previousElementSibling
+					handleCheckboxClick(e, associatedCheckbox)
+				}
+			})
+
+			function handleCheckboxClick(e, clickedCheckbox) {
+				const clickedCheckboxIndex = checkboxes.indexOf(clickedCheckbox)
+				// If the user is holding shift and there is a last checked checkbox
+				if (e.shiftKey && lastCheckedIndex !== null) {
+					checkAllBetween(lastCheckedIndex, clickedCheckboxIndex)
+				}
+				lastCheckedIndex = clickedCheckboxIndex
+			}
+
+			function checkAllBetween(startIndex, endIndex) {
+				const [minIndex, maxIndex] = [startIndex, endIndex].sort()
+				for (let i = minIndex; i <= maxIndex; i++) {
+					checkboxes[i].checked = true
+				}
+			}
+		</script>
+	</body>
+</html>
