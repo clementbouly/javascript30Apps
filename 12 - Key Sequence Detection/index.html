@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Key Detection</title>
+		<script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+		<link rel="icon" href="https://fav.farm/🔥" />
+	</head>
+	<body>
+		<script>
+			const pressed = []
+			const secret = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
+			document.addEventListener("keydown", function (event) {
+				pressed.push(event.key)
+				checkSecretCode()
+			})
+
+			function checkSecretCode() {
+				// if pressed array greater than 10, remove first item
+				if (pressed.length > secret.length) {
+					pressed.shift()
+				}
+				if (pressed.join("").includes(secret.join(""))) {
+					cornify_add()
+					alert("You have unlocked the secret!")
+					pressed.length = 0
+				}
+			}
+		</script>
+	</body>
+</html>
