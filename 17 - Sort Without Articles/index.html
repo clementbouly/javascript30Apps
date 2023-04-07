@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Sort Without Articles</title>
-		<link rel="icon" href="https://fav.farm/✅" />
+		<link rel="icon" href="https://fav.farm/🔥" />
 	</head>
 	<body>
 		<style>
@@ -43,6 +43,7 @@
 		</style>
 
 		<ul id="bands"></ul>
+		<ul id="bands" class="sorted"></ul>
 
 		<script>
 			const bands = [
@@ -61,17 +62,26 @@
 				"An Old Dog",
 			]
 
+			const bandsSortedList = document.querySelector(".sorted")
+			const bandsNotSortedList = document.querySelector("#bands")
+
+			// display bands
+			function displayBands(bands, bandsList) {
+				bandsList.innerHTML = bands.map((band) => `<li>${band}</li>`).join("")
+			}
+
+			// remove articles
 			function strip(bandName) {
 				return bandName.replace(/^(a |the |an )/i, "").trim()
 			}
 
-			const sortedBands = bands.sort((a, b) => (strip(a) > strip(b) ? 1 : -1))
-      
+			const bandsSortedWrong = [...bands].sort((a, b) => (a > b ? 1 : -1))
 
-			document.querySelector("#bands").innerHTML = sortedBands.map((band) => `<li>${band}</li>`).join("")
+			displayBands(bandsSortedWrong, bandsNotSortedList)
 
-      console.log(bands);
-			console.log(sortedBands)
+			bands.sort((a, b) => (strip(a) > strip(b) ? 1 : -1))
+
+			displayBands(bands, bandsSortedList)
 		</script>
 	</body>
 </html>
