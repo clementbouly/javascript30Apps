@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Speech Detection</title>
+		<link rel="icon" href="https://fav.farm/🔥" />
+	</head>
+	<body>
+		<div class="content">
+			<h1>Speech Detection</h1>
+			<button>Start Detection</button>
+		</div>
+		<div class="words" contenteditable></div>
+
+		<script>
+			window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+			const recognition = new SpeechRecognition()
+			recognition.interimResults = true
+
+			let p = document.createElement("p")
+			const words = document.querySelector(".words")
+			const startButton = document.querySelector("button")
+			let recognizing = false
+			let isSecretFound = false
+			words.appendChild(p)
+
+			recognition.addEventListener("result", (e) => {
+				const transcript = Array.from(e.results)
+					.map((result) => result[0])
+					.map((result) => result.transcript)
+					.join("")
+
+				p.textContent = transcript
+				if (e.results[0].isFinal) {
+					p = document.createElement("p")
+					words.appendChild(p)
+				}
+
+				if (!isSecretFound && transcript.toLowerCase().includes("tortue mexicaine")) {
+					alert("Secret found!")
+					isSecretFound = true
+				}
+			})
+
+			// recognition.start()
+			// recognition.addEventListener("end", recognition.start)
+
+			startButton.onclick = toggleStartStop
+
+			function toggleStartStop() {
+				console.log(recognizing)
+				if (recognizing) {
+					startButton.innerHTML = "Resume"
+					startButton.classList.remove("paused")
+					recognition.stop()
+					// remove the event listener
+					recognition.removeEventListener("end", recognition.start)
+					recognizing = false
+				} else {
+					startButton.innerHTML = "Stop"
+					startButton.classList.add("paused")
+					recognition.start()
+					recognition.addEventListener("end", recognition.start)
+					recognizing = true
+				}
+			}
+		</script>
+
+		<style>
+			html {
+				font-size: 10px;
+			}
+
+			body {
+				background: #ffc600;
+				font-family: "helvetica neue";
+				font-weight: 200;
+				font-size: 20px;
+			}
+
+			.content {
+				text-align: center;
+			}
+
+			button {
+				font-size: 2rem;
+				padding: 1rem 2rem;
+				border: 0;
+				border-radius: 5px;
+				background: #338e2e;
+				color: white;
+				box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1);
+				cursor: pointer;
+			}
+
+			.paused,
+			.paused:hover {
+				background: #d21616;
+			}
+
+			button:hover {
+				background: #4caf50;
+				transform: translateY(-3px);
+			}
+
+			button:active {
+				transform: translateY(0x);
+				box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+			}
+
+			.words {
+				max-width: 500px;
+				margin: 50px auto;
+				background: white;
+				border-radius: 5px;
+				box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+				padding: 1rem 2rem 1rem 5rem;
+				background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+				background-size: 100% 3rem;
+				position: relative;
+				line-height: 3rem;
+			}
+
+			p {
+				margin: 0 0 3rem;
+			}
+
+			.words:before {
+				content: "";
+				position: absolute;
+				width: 4px;
+				top: 0;
+				left: 30px;
+				bottom: 0;
+				border: 1px solid;
+				border-color: transparent #efe4e4;
+			}
+		</style>
+	</body>
+</html>
