@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Follow Along Nav</title>
-		<link rel="icon" href="https://fav.farm/✅" />
+		<link rel="icon" href="https://fav.farm/🔥" />
 	</head>
 	<body>
 		<h2>Cool</h2>
@@ -120,10 +120,6 @@
 				border-radius: 5px;
 			}
 
-			.cool > li > a:hover {
-				background: rgba(0, 0, 0, 0.4);
-			}
-
 			nav ul {
 				list-style: none;
 				margin: 0;
@@ -222,6 +218,11 @@
 				margin-bottom: 10px;
 			}
 
+			.visible {
+				opacity: 1;
+				display: block;
+			}
+
 			/* Matches Twitter, TWITTER, twitter, tWitter, TWiTTeR... */
 			.button[href*="twitter"] {
 				background: #019fe9;
@@ -235,38 +236,36 @@
 		</style>
 
 		<script>
-			const triggers = document.querySelectorAll(".cool > li")
-			const background = document.querySelector(".dropdownBackground")
-			const nav = document.querySelector(".top")
+			const listElements = document.querySelectorAll(".cool > li")
+			const dropdownBackground = document.querySelector(".dropdownBackground")
+			const nav = document.querySelector("nav")
+			const arrowHeight = document.querySelector(".arrow").offsetHeight
 
 			function handleEnter() {
-				this.classList.add("trigger-enter")
-				setTimeout(() => this.classList.contains("trigger-enter") && this.classList.add("trigger-enter-active"), 150)
-				background.classList.add("open")
-
 				const dropdown = this.querySelector(".dropdown")
-				const dropdownCoords = dropdown.getBoundingClientRect()
-				const navCoords = nav.getBoundingClientRect()
+				this.classList.add("trigger-enter")
+				setTimeout(() => {
+					if (this.classList.contains("trigger-enter")) {
+						this.classList.add("trigger-enter-active")
+					}
+				}, 150)
+				dropdownBackground.classList.add("open")
 
-				const coords = {
-					height: dropdownCoords.height,
-					width: dropdownCoords.width,
-					top: dropdownCoords.top - navCoords.top,
-					left: dropdownCoords.left - navCoords.left,
-				}
+				const { left, top, width, height } = dropdown.getBoundingClientRect()
+				const { top: navTop } = nav.getBoundingClientRect()
 
-				background.style.setProperty("width", `${coords.width}px`)
-				background.style.setProperty("height", `${coords.height}px`)
-				background.style.setProperty("transform", `translate(${coords.left}px, ${coords.top}px)`)
+				dropdownBackground.style.setProperty("transform", `translate(${left}px, ${top - navTop}px)`)
+				dropdownBackground.style.setProperty("width", `${width}px`)
+				dropdownBackground.style.setProperty("height", `${height}px`)
 			}
 
 			function handleLeave() {
 				this.classList.remove("trigger-enter", "trigger-enter-active")
-				background.classList.remove("open")
+				dropdownBackground.classList.remove("open")
 			}
 
-			triggers.forEach((trigger) => trigger.addEventListener("mouseenter", handleEnter))
-			triggers.forEach((trigger) => trigger.addEventListener("mouseleave", handleLeave))
+			listElements.forEach((li) => li.addEventListener("mouseenter", handleEnter))
+			listElements.forEach((li) => li.addEventListener("mouseleave", handleLeave))
 		</script>
 	</body>
 </html>
